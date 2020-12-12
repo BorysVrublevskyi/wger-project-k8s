@@ -1,41 +1,83 @@
 # wger-project-k8s
 This is a working kubernetes realization of [wger-project/docker](https://github.com/wger-project/docker)
 
-This project needs a nginx image with nginx.conf configured for wger. So you can build it on your worker node. 
+## Prepare Nginx Docker Image
+
+This project needs a Nginx image with `nginx.conf` configured for wger. So you can build it on your **worker node**. 
 
 ```
 cd ./wger-project-k8s/nginx/
 docker build -t nginx-wger .
 ```
 
-If you have multiple worker nodes it's better to push built image to the Docker registry and than edit image name in nginx-deployment.yaml to pull it.
+If you have multiple worker nodes it's better to push image to the Docker registry and than edit image's name in `nginx-deployment.yaml` to pull it.
 
-Deploy Wger to Kubernetes
+## Deploy Wger to Kubernetes
 
 ```
 kubectl apply -f ./wger-project-k8s/
 ```
 
-After the first run you need to make [Django Migrations](https://docs.djangoproject.com/en/3.1/topics/migrations/). Place an actual web pod's name to the command.
+## Django Migrations
 
-With one command:
-
-```
-kubectl exec -it --namespace=default web-..... -- bash -c "python3 manage.py makemigrations && python3 manage.py migrate"
-```
-
-Or attach terminal and run commands manually:
+After the first run you need to make [Django Migrations](https://docs.djangoproject.com/en/3.1/topics/migrations/). Place an actual web pod's name to the command and run it.
 
 ```
-kubectl exec --stdin --tty web-..... -- /bin/bash
-python3 manage.py makemigrations 
-python3 manage.py migrate
+kubectl exec -it --namespace=default web-..... -- bash -c "python3 manage.py makemigrations && python3 manage.py migrate && python3 manage.py migrate --fake-initial && yarn install"
 ```
 
-To have access from outside you can expose service on node's port
+It might take some time for the service to become available.
+
+## Expose service on node port
+
+To have access from the outside you can expose service on node's port
 
 ```
 kubectl expose deployment nginx --type=NodePort --name=nginx-on-node-service
 ```
 
-Default credentials is admin:admin
+Default credentials is admin:adminadmin
+
+
+## Debug and diagnostic
+
+### Tools
+
+* [LazyDocker](https://github.com/jesseduffield/lazydocker) - Docker TUI
+
+* [Dockly](https://github.com/lirantal/dockly) - Docker TUI, but on NodeJS
+
+* [K9S](https://github.com/derailed/k9s) - Kubernetes TUI
+
+### Commands
+
+```
+# Attach terminal
+kubectl exec --stdin --tty PODNAME -- /bin/bash
+
+# Watch logs of pod
+kubectl logs --follow PODNAME
+
+# Get Services
+kubectl get svc
+
+# Check server's reply
+curl -I WorkerNodeIP:NodePort/en/software/features
+
+# Pod restart
+kubectl delete pod PODNAME
+```
+
+
+## Delete and cleanup
+
+```
+# On master node
+kubectl delete -f ./wger-project-k8s
+
+# On worker node
+docker system prune -a
+
+# On NFS server
+rm -rf /media/k8s/{data,media,postgres-data,static}/*
+```
