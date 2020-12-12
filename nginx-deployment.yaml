@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    io.wger.service: nginx
+  name: nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.wger.service: nginx
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        io.wger.service: nginx
+    spec:
+      containers:
+      # - image: nginx
+      - image: nginx-wger
+        imagePullPolicy: "IfNotPresent"
+        # name: nginx
+        name: nginx-wger
+        ports:
+        - containerPort: 80
+        resources: {}
+        volumeMounts:
+        - mountPath: /wger/static
+          name: static
+          readOnly: true
+        - mountPath: /wger/media
+          name: media
+          readOnly: true
+      restartPolicy: Always
+      serviceAccountName: ""
+      volumes:
+      - name: nginx-config
+        configMap:
+          name: prod-env
+      - name: nginx-default
+        configMap:
+          name: prod-env
+      - name: static
+        persistentVolumeClaim:
+          claimName: static
+          readOnly: true
+      - name: media
+        persistentVolumeClaim:
+          claimName: media
+          readOnly: true
+status: {}

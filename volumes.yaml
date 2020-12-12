@@ -1,0 +1,53 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: static
+  labels:
+    io.wger.service: static
+    #tier: tier
+spec:
+  storageClassName: nfs
+  persistentVolumeReclaimPolicy: Retain # Recycle, Delete
+  capacity:
+    storage: 100Mi # 1Gi
+  accessModes:
+    - ReadWriteMany
+  nfs:
+    server: 192.168.1.5
+    path: "/media/k8s/static"
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: media
+  labels:
+    io.wger.service: media
+    #tier: tier
+spec:
+  storageClassName: nfs
+  persistentVolumeReclaimPolicy: Retain
+  capacity:
+    storage: 100Mi
+  accessModes:
+    - ReadWriteMany
+  nfs:
+    server: 192.168.1.5
+    path: "/media/k8s/media"
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: postgres-data
+  labels:
+    io.wger.service: postgres-data
+    #tier: tier
+spec:
+  storageClassName: nfs
+  persistentVolumeReclaimPolicy: Retain
+  capacity:
+    storage: 100Mi
+  accessModes:
+    - ReadWriteMany
+  nfs:
+    server: 192.168.1.5
+    path: "/media/k8s/postgres-data"

@@ -1,0 +1,103 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    io.wger.service: web
+  name: web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.wger.service: web
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        io.wger.service: web
+    spec:
+      containers:
+      - env:
+        - name: DJANGO_CACHE_BACKEND
+          valueFrom:
+            configMapKeyRef:
+              key: DJANGO_CACHE_BACKEND
+              name: prod-env
+        - name: DJANGO_CACHE_CLIENT_CLASS
+          valueFrom:
+            configMapKeyRef:
+              key: DJANGO_CACHE_CLIENT_CLASS
+              name: prod-env
+        - name: DJANGO_CACHE_LOCATION
+          valueFrom:
+            configMapKeyRef:
+              key: DJANGO_CACHE_LOCATION
+              name: prod-env
+        - name: DJANGO_CACHE_TIMEOUT
+          valueFrom:
+            configMapKeyRef:
+              key: DJANGO_CACHE_TIMEOUT
+              name: prod-env
+        - name: DJANGO_DB_DATABASE
+          valueFrom:
+            configMapKeyRef:
+              key: DJANGO_DB_DATABASE
+              name: prod-env
+        - name: DJANGO_DB_ENGINE
+          valueFrom:
+            configMapKeyRef:
+              key: DJANGO_DB_ENGINE
+              name: prod-env
+        - name: DJANGO_DB_HOST
+          valueFrom:
+            configMapKeyRef:
+              key: DJANGO_DB_HOST
+              name: prod-env
+        - name: DJANGO_DB_PASSWORD
+          valueFrom:
+            configMapKeyRef:
+              key: DJANGO_DB_PASSWORD
+              name: prod-env
+        - name: DJANGO_DB_PORT
+          valueFrom:
+            configMapKeyRef:
+              key: DJANGO_DB_PORT
+              name: prod-env
+        - name: DJANGO_DB_USER
+          valueFrom:
+            configMapKeyRef:
+              key: DJANGO_DB_USER
+              name: prod-env
+        - name: DJANGO_DEBUG
+          valueFrom:
+            configMapKeyRef:
+              key: DJANGO_DEBUG
+              name: prod-env
+        - name: WGER_USE_GUNICORN
+          valueFrom:
+            configMapKeyRef:
+              key: WGER_USE_GUNICORN
+              name: prod-env
+        image: wger/devel:2.0-dev
+        imagePullPolicy: "IfNotPresent"
+        name: web
+        ports:
+        - containerPort: 8000
+        resources: {}
+        volumeMounts:
+        - mountPath: /home/wger/static
+          name: static
+        - mountPath: /home/wger/media
+          name: media
+      restartPolicy: Always
+      serviceAccountName: ""
+      volumes:
+      - name: static
+        persistentVolumeClaim:
+          claimName: static
+      - name: media
+        persistentVolumeClaim:
+          claimName: media
+      securityContext:
+        fsGroup: 65534          
+status: {}

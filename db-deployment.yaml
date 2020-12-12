@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    io.wger.service: db
+  name: db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.wger.service: db
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        io.wger.service: db
+    spec:
+      containers:
+      - env:
+        - name: POSTGRES_DB
+          value: wger
+        - name: POSTGRES_PASSWORD
+          value: wger
+        - name: POSTGRES_USER
+          value: wger
+        image: postgres:12.0-alpine
+        imagePullPolicy: "IfNotPresent"
+        name: db
+        ports:
+        - containerPort: 5432
+        resources: {}
+        volumeMounts:
+        - mountPath: /var/lib/postgresql/data/
+          name: postgres-data
+      restartPolicy: Always
+      serviceAccountName: ""
+      volumes:
+      - name: postgres-data
+        persistentVolumeClaim:
+          claimName: postgres-data
+status: {}

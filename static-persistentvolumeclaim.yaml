@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: static
+  labels:
+    io.wger.service: static
+spec:
+  storageClassName: nfs
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 100Mi
+  volumeName: "static"
+# status: {}
