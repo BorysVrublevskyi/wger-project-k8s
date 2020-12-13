@@ -19,11 +19,20 @@ spec:
       containers:
       - env:
         - name: POSTGRES_DB
-          value: wger
+          valueFrom:
+            configMapKeyRef:
+              key: POSTGRES_DB
+              name: prod-env
         - name: POSTGRES_PASSWORD
-          value: wger
+          valueFrom:
+            configMapKeyRef:
+              key: POSTGRES_PASSWORD
+              name: prod-env
         - name: POSTGRES_USER
-          value: wger
+          valueFrom:
+            configMapKeyRef:
+              key: POSTGRES_USER
+              name: prod-env
         image: postgres:12.0-alpine
         imagePullPolicy: "IfNotPresent"
         name: db

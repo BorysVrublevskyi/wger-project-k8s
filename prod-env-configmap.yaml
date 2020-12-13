@@ -12,6 +12,9 @@ data:
   DJANGO_DB_USER: wger
   DJANGO_DEBUG: "False"
   WGER_USE_GUNICORN: "True"
+  POSTGRES_DB: "wger"
+  POSTGRES_PASSWORD: "wger"
+  POSTGRES_USER: "wger"
 kind: ConfigMap
 metadata:
   labels:
