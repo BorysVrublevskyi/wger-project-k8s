@@ -42,11 +42,13 @@ Default credentials is admin:adminadmin
 
 ### Tools
 
-* [LazyDocker](https://github.com/jesseduffield/lazydocker) - Docker TUI
+* [Kompose](https://kubernetes.io/docs/tasks/configure-pod-container/translate-compose-kubernetes/) - Translate a Docker Compose File to Kubernetes Resources.
 
-* [Dockly](https://github.com/lirantal/dockly) - Docker TUI, but on NodeJS
+* [LazyDocker](https://github.com/jesseduffield/lazydocker) - A simple terminal UI for both docker and docker-compose, written in Go with the gocui library.
 
-* [K9S](https://github.com/derailed/k9s) - Kubernetes TUI
+* [Dockly](https://github.com/lirantal/dockly) - Immersive terminal interface for managing docker containers and services written on NodeJS.
+
+* [K9S](https://github.com/derailed/k9s) - Kubernetes CLI to manage your clusters in style.
 
 ### Commands
 
