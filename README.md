@@ -17,16 +17,7 @@ If you have multiple worker nodes it's better to push image to the Docker regist
 ```bash
 kubectl apply -f ./wger-project-k8s/
 ```
-
-## Django Migrations
-
-After the first run you need to make [Django Migrations](https://docs.djangoproject.com/en/3.1/topics/migrations/). Place an actual web pod's name to the command and run it.
-
-```bash
-kubectl exec -it --namespace=default web-..... -- bash -c "python3 manage.py makemigrations && python3 manage.py migrate && python3 manage.py migrate --fake-initial && yarn install"
-```
-
-It might take some time for the service to become available.
+It might take some time for the service to become available. Deploy will end when you'll see **"Booting worker with pid: NNN"** in log of web pod. So don't panic when you will see "Done in NN s." but error 502 will be still appearing.
 
 ## Expose service on node port
 
@@ -49,6 +40,14 @@ Default credentials is admin:adminadmin
 * [Dockly](https://github.com/lirantal/dockly) - Immersive terminal interface for managing docker containers and services written on NodeJS.
 
 * [K9S](https://github.com/derailed/k9s) - Kubernetes CLI to manage your clusters in style.
+
+<!-- ## Django Migrations
+
+[Django Migrations](https://docs.djangoproject.com/en/3.1/topics/migrations/). Place an actual web pod's name to the command and run it.
+
+```bash
+kubectl exec -it --namespace=default web-..... -- bash -c "python3 manage.py makemigrations && python3 manage.py migrate && python3 manage.py migrate --fake-initial && yarn install"
+``` -->
 
 ### Commands
 
